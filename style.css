@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    overflow: hidden;
+    background-color: #ddd;
+}
+
+h1 {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    color: black;
+    text-shadow: 1px 1px 5px white;
+}
+
+#info {
+    position: absolute;
+    top: 50px;
+    width: 100%;
+    color: black;
+    font-size: 16px;
+    text-shadow: 1px 1px 5px white;
+}
+
+canvas {
+    display: block;
+}

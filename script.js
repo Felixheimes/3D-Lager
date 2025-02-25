@@ -1,20 +1,23 @@
 // Initialize Three.js Scene
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xaaaaaa); // Light gray background
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
+// Attach renderer correctly
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Lighting for better visibility
-const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+// Lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(10, 20, 10);
 scene.add(directionalLight);
 
-// Orbit Controls (Rotation & Zoom)
+// Orbit Controls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
@@ -22,67 +25,34 @@ controls.screenSpacePanning = false;
 controls.minDistance = 5;
 controls.maxDistance = 100;
 
-// Position the Camera
+// Camera Position
 camera.position.set(30, 20, 50);
-camera.lookAt(0, 5, 0);
+camera.lookAt(0, 10, 0);
 
-// Warehouse Grid Settings
-const rows = 18;
-const columns = 4;
-const maxStackHeight = 4;
-const boxSize = 2;
-const warehouse = [];
+// Grid Helper (Check If Scene Is Rendering)
+const gridHelper = new THREE.GridHelper(100, 20);
+scene.add(gridHelper);
 
-// Function to create a 3D Box
-function createBox(x, y, z, label) {
-    const geometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+// Function to Create 3D Boxes
+function createBox(x, y, z) {
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
     const material = new THREE.MeshStandardMaterial({ color: 0x808080 });
     const box = new THREE.Mesh(geometry, material);
     box.position.set(x, y, z);
-    box.userData = { label: label || "Empty Box", color: 0x808080 };
     return box;
 }
 
-// Populate Warehouse with Stackable Boxes
-for (let i = 0; i < rows; i++) {
-    warehouse[i] = [];
-    for (let j = 0; j < columns; j++) {
-        warehouse[i][j] = [];
-        for (let k = 0; k < maxStackHeight; k++) {
-            const box = createBox(i * 3, k * 3, j * 3);
-            scene.add(box);
-            warehouse[i][j].push(box);
-        }
-    }
-}
+// Add One Box for Testing
+const testBox = createBox(0, 5, 0);
+scene.add(testBox);
 
-// Raycaster for Object Selection
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-window.addEventListener('click', (event) => {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(scene.children);
-
-    if (intersects.length > 0) {
-        const selectedBox = intersects[0].object;
-        const newLabel = prompt("Enter details (Wine Name, Year, Bottles):", selectedBox.userData.label);
-        if (newLabel !== null) {
-            selectedBox.userData.label = newLabel;
-            selectedBox.material.color.set(0x008000); // Turn green when filled
-        }
-    }
-});
-
-// Render Loop (Forcing Updates)
+// Render Loop
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
 }
 animate();
+
 
 

@@ -3,18 +3,18 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-// Attach renderer to the document
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Lighting Fix (Brighter Scene)
-const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+// Lighting for better visibility
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
 scene.add(ambientLight);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(10, 20, 10);
 scene.add(directionalLight);
 
-// Orbit Controls (Enable Rotation & Zoom)
+// Orbit Controls (Rotation & Zoom)
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
@@ -22,8 +22,8 @@ controls.screenSpacePanning = false;
 controls.minDistance = 5;
 controls.maxDistance = 100;
 
-// Camera Fix (Move Closer)
-camera.position.set(20, 15, 30);
+// Position the Camera
+camera.position.set(30, 20, 50);
 camera.lookAt(0, 5, 0);
 
 // Warehouse Grid Settings
@@ -43,13 +43,13 @@ function createBox(x, y, z, label) {
     return box;
 }
 
-// Populate Warehouse with Stackable Positions
+// Populate Warehouse with Stackable Boxes
 for (let i = 0; i < rows; i++) {
     warehouse[i] = [];
     for (let j = 0; j < columns; j++) {
         warehouse[i][j] = [];
         for (let k = 0; k < maxStackHeight; k++) {
-            const box = createBox(i * 3, k * 3, j * 3); // Adjust positions
+            const box = createBox(i * 3, k * 3, j * 3);
             scene.add(box);
             warehouse[i][j].push(box);
         }

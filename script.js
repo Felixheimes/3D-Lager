@@ -1,7 +1,9 @@
 // Initialize Three.js Scene
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('warehouseCanvas') });
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+// Attach renderer to the document
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -12,23 +14,23 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(10, 20, 10);
 scene.add(directionalLight);
 
-// Orbit Controls Fix (Enable Rotation & Zoom)
+// Orbit Controls (Enable Rotation & Zoom)
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.minDistance = 5;
-controls.maxDistance = 50;
+controls.maxDistance = 100;
 
 // Camera Fix (Move Closer)
-camera.position.set(15, 15, 30);
+camera.position.set(20, 15, 30);
 camera.lookAt(0, 5, 0);
 
 // Warehouse Grid Settings
 const rows = 18;
 const columns = 4;
 const maxStackHeight = 4;
-const boxSize = 1;
+const boxSize = 2;
 const warehouse = [];
 
 // Function to create a 3D Box
@@ -47,7 +49,7 @@ for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
         warehouse[i][j] = [];
         for (let k = 0; k < maxStackHeight; k++) {
-            const box = createBox(i * 2, k * 2 + 1, j * 2); // Adjust box position
+            const box = createBox(i * 3, k * 3, j * 3); // Adjust positions
             scene.add(box);
             warehouse[i][j].push(box);
         }
@@ -75,7 +77,7 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// Render Loop
+// Render Loop (Forcing Updates)
 function animate() {
     requestAnimationFrame(animate);
     controls.update();

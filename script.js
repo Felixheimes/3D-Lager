@@ -5,20 +5,24 @@ const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('ware
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Lighting Fix
-const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Brighter light
+// Lighting Fix (Brighter Scene)
+const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 scene.add(ambientLight);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(10, 20, 10);
 scene.add(directionalLight);
 
-// Orbit Controls Fix
+// Orbit Controls Fix (Enable Rotation & Zoom)
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.minDistance = 5;
 controls.maxDistance = 50;
+
+// Camera Fix (Move Closer)
+camera.position.set(15, 15, 30);
+camera.lookAt(0, 5, 0);
 
 // Warehouse Grid Settings
 const rows = 18;
@@ -43,16 +47,12 @@ for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
         warehouse[i][j] = [];
         for (let k = 0; k < maxStackHeight; k++) {
-            const box = createBox(i * 1.2, k * 1.2, j * 1.2);
+            const box = createBox(i * 2, k * 2 + 1, j * 2); // Adjust box position
             scene.add(box);
             warehouse[i][j].push(box);
         }
     }
 }
-
-// Camera Fix (Move Further Away)
-camera.position.set(30, 20, 50); 
-camera.lookAt(0, 0, 0);
 
 // Raycaster for Object Selection
 const raycaster = new THREE.Raycaster();
@@ -70,7 +70,7 @@ window.addEventListener('click', (event) => {
         const newLabel = prompt("Enter details (Wine Name, Year, Bottles):", selectedBox.userData.label);
         if (newLabel !== null) {
             selectedBox.userData.label = newLabel;
-            selectedBox.material.color.set(0x008000); // Mark box as filled
+            selectedBox.material.color.set(0x008000); // Turn green when filled
         }
     }
 });
@@ -82,4 +82,5 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate();
+
 

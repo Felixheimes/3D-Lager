@@ -10,15 +10,22 @@
     <h1>Wuertzberg 3D Lager Management</h1>
     <div id="info">Click on a box to edit details.</div>
 
-    <!-- The Canvas will be automatically created by Three.js -->
-    
-    <!-- Load Three.js and OrbitControls -->
-    <script src="https://cdns.jsdelivr.net/npm/three@.0.155.0/build/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <!-- Load Three.js from a stable source -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/controls/OrbitControls.js"></script>
 
-    <!-- Load the script file at the END to ensure the DOM is ready -->
-    <script src="script.js"></script>
+    <!-- Load script.js only after Three.js is ready -->
+    <script>
+        window.onload = function () {
+            if (typeof THREE === 'undefined') {
+                console.error("Error: THREE.js did not load properly!");
+            } else {
+                console.log("Three.js loaded successfully!");
+                const script = document.createElement('script');
+                script.src = "script.js";
+                document.body.appendChild(script);
+            }
+        };
+    </script>
 </body>
 </html>
-
-
